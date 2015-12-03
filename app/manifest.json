@@ -1,6 +1,6 @@
 {
-  "name": "Polymer Starter Kit",
-  "short_name": "Polymer Starter Kit",
+  "name": "a progressive web app for cats",
+  "short_name": "PWA for cats",
   "icons": [{
         "src": "images/touch/icon-128x128.png",
         "sizes": "128x128",
