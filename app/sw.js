@@ -22,24 +22,40 @@ self.oninstall = function(event) {
   );
 };
 
-self.onfetch = function(event) {
-  // event.respondWith(caches.match(event.request));
-};
-
-self.onfetch = function(event) {
+self.addEventListener('fetch', function(event) {
   event.respondWith(
-    caches.open('cats').then(function(cache) {
-      return cache.match(event.request).then(function(response) {
-        console.log(event.request.url, response);
-        if (response)
+    caches.match(event.request)
+      .then(function(response) {
+        if (response) {
           return response;
-        fetch(event.request.clone()).then(function(response) {
-          if (response.status < 400) {
-            cache.put(event.request, response.clone());
-          }
-          return response;
-        });
+        }
+
+        var fetchRequest = event.request.clone();
+        return fetch(fetchRequest)
+          .then(function(response) {
+            if (!response || response.status !== 200 || response.type !== 'basic') {
+              return response;
+            }
+
+            var responseToCache = response.clone();
+
+            caches.open(CACHE_NAME)
+              .then(function(cache) {
+                cache.put(event.request, responseToCache);
+              });
+
+            return response;
+          });
       })
+  );
+});
+
+self.addEventListener('push', function(event) {
+  e.waitUntil(
+    self.registration.showNotification('Title', {
+      body: 'Body',
+      icon: 'http://placehold.it/192x192',
+      tag: 'push-notification-tag'
     })
   );
-};
+});

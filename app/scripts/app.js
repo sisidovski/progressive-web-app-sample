@@ -71,13 +71,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     document.getElementById('mainContainer').scrollTop = 0;
   };
 
-  navigator.serviceWorker.register('/sw.js')
-    .then(function(registration) {
-      console.log(registration);
-        // Success!
-    }).catch(function(error) {
-      console.log(error);
-        // Error...
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').then(function() {
+      Notification.requestPermission(function(permission) {
+        //
+      });
     });
+  }
 
 })(document);
